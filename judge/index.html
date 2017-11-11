@@ -1,0 +1,50 @@
+<meta charset="utf-8">
+
+<html>
+<head>
+
+<script src="jquery-3.2.1.min.js">
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCZtGolQgx3na78w8qu7fNPLs0k2VeUvqA",
+    authDomain: "krok-judge.firebaseapp.com",
+    databaseURL: "https://krok-judge.firebaseio.com",
+    projectId: "krok-judge",
+    storageBucket: "krok-judge.appspot.com",
+    messagingSenderId: "906149959855"
+  };
+  firebase.initializeApp(config);
+</script>
+
+
+<script>
+var messagesToWrite = {}
+
+firebase.database().ref('/messages/').once('value').then(function(snapshot) {
+  var messages = snapshot.val();
+  for (key in messages) {
+    $('#messages').append($('<div>').text(messages[key]));
+    messagesToWrite[key] = messages[key];
+  }
+  Math.random()
+});
+
+$(function() {
+  $('#my-button').click(function() {
+    messagesToWrite[""+Math.floor(Math.random() * 1000)] = $('#my-value').val();
+    firebase.database().ref('/messages/').set(messagesToWrite);
+  });
+});
+</script>
+  </head>
+<body>
+  <div id="messages">
+  </div>
+  Сообщение: <input type="text" value="Хорошо" id="my-value" />
+  <input type="button" value="Отправить" id="my-button" />
+</body>
+</html>
